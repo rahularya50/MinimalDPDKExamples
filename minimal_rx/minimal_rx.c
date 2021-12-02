@@ -140,17 +140,6 @@ void rx_packets(void)
 
 			packet_count += nb_rx;
 
-			//printf("received %d packets:\n",nb_rx);
-
-			for(i=0;i<nb_rx;++i){
-
-				printf("----->processing packet %d\n",i);
-				printf("----->pkt_len=%d\n",bufs[i]->pkt_len);
-				DumpHex(rte_pktmbuf_mtod(bufs[i],char *),bufs[i]->pkt_len);
-
-				rte_pktmbuf_free(bufs[i]);
-			}
-
 		}
 	}
 }
