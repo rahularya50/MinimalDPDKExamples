@@ -355,7 +355,7 @@ int main(int argc, char **argv)
                 fprintf(stderr, "missing -d for IP destination adress\n");
                 exit(1);
         }
-        if(optarg==0) {
+        if(packet_size==0) {
                 fprintf(stderr, "missing -n for packet body size (bytes)\n");
                 exit(1);
         }
