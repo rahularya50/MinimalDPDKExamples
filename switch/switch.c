@@ -318,7 +318,7 @@ int main(int argc, char **argv)
 
 	signal (SIGINT, exit_stats);
 
-	while ((c = getopt(argc, argv, "m:s:d:h")) != -1)
+	while ((c = getopt(argc, argv, "m:s:d:n:h")) != -1)
 		switch(c) {
 		case 'm':
 			// note, not quite sure why last two bytes are zero, but that is how DPDK likes it
