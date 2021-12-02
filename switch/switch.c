@@ -31,7 +31,9 @@
 #define IP_HDRLEN  0x05 /* default IP header length == five 32-bits words. */
 #define IP_VHL_DEF (IP_VERSION | IP_HDRLEN)
 
-#define TX_PACKET_LENGTH 862
+#define TX_PACKET_LENGTH (10+90)
+
+// {10, 50, 100, 500, 1000, 1500, 1957}
 
 #if RTE_BYTE_ORDER == RTE_BIG_ENDIAN
 #define RTE_BE_TO_CPU_16(be_16_v)  (be_16_v)
