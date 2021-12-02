@@ -42,7 +42,7 @@
 #define IP_HDRLEN  0x05 /* default IP header length == five 32-bits words. */
 #define IP_VHL_DEF (IP_VERSION | IP_HDRLEN)
 
-#define TX_PACKET_LENGTH 862
+int packet_size = 0;
 
 #if RTE_BYTE_ORDER == RTE_BIG_ENDIAN
 #define RTE_BE_TO_CPU_16(be_16_v)  (be_16_v)
@@ -173,7 +173,7 @@ static void send_packet(void)
 	pkt = rte_mbuf_raw_alloc(mbuf_pool);
         if(pkt == NULL) {printf("trouble at rte_mbuf_raw_alloc\n"); return;}
         rte_pktmbuf_reset_headroom(pkt);
-        pkt->data_len = TX_PACKET_LENGTH;
+        pkt->data_len = packet_size;
 	
         // set up addresses 
         dst_eth_addr.as_int=rte_cpu_to_be_64(DST_MAC);
@@ -269,7 +269,7 @@ static void exit_stats(int sig)
 	printf("Total packets: %lu\n", packet_count);
 	printf("Total transmission time: %ld seconds\n", total_time);
 	printf("Average transmission rate: %lu pps\n", packet_count / total_time);
-	printf("                           %lu Mbps\n", ((packet_count * TX_PACKET_LENGTH * 8) / total_time) / 1000000);
+	printf("                           %lu Mbps\n", ((packet_count * packet_size * 8) / total_time) / 1000000);
 	printf("=======================================\n");
 	exit(0);
 }
@@ -307,7 +307,7 @@ int main(int argc, char **argv)
                         ip_dst_flag=1;
                         break;
 		case 'h':
-			printf("usage -- -m [dst MAC] -s [src IP] -d [dst IP]\n");
+			printf("usage -- -m [dst MAC] -s [src IP] -d [dst IP] -n [packet size]\n");
 			exit(0);
 			break;
 		}
@@ -322,6 +322,10 @@ int main(int argc, char **argv)
         }
         if(ip_dst_flag==0) {
                 fprintf(stderr, "missing -d for IP destination adress\n");
+                exit(1);
+        }
+        if(optarg==0) {
+                fprintf(stderr, "missing -n for packet body size (bytes)\n");
                 exit(1);
         }
 
@@ -339,7 +343,7 @@ int main(int argc, char **argv)
 
 	printf("Sending packets ... [Press Ctrl+C to exit]\n");
 
-        pkt_data_len = (uint16_t) (TX_PACKET_LENGTH - (sizeof(struct rte_ether_hdr) +
+        pkt_data_len = (uint16_t) (packet_size - (sizeof(struct rte_ether_hdr) +
                                                     sizeof(struct rte_ipv4_hdr) +
                                                     sizeof(struct rte_udp_hdr)));
         setup_pkt_udp_ip_headers(&pkt_ip_hdr, &pkt_udp_hdr, pkt_data_len);
