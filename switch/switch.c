@@ -369,6 +369,7 @@ int main(int argc, char **argv)
                                                     sizeof(struct rte_udp_hdr)));
         setup_pkt_udp_ip_headers(&pkt_ip_hdr, &pkt_udp_hdr, pkt_data_len);
 
+	t1 = time(NULL);
 	rx_packets();
 
 	return(0);
