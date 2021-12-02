@@ -289,7 +289,7 @@ void rx_packets(void)
 			if (unlikely(nb_rx == 0))
 				continue;
 
-			packet_count += nb_rx;
+			// packet_count += nb_rx;
 
                         for (int i = 0; i != nb_rx; ++i) {
 			        send_packet();
