@@ -204,10 +204,10 @@ static void send_packet(void)
 
 // Initialize Port
 static inline int
-port_init(uint16_t port)
+port_init(uint16_t port, struct rte_mempool *mbuf_pool)
 {
         struct rte_eth_conf port_conf = port_conf_default;
-        const uint16_t rx_rings = 0, tx_rings = 1;
+        const uint16_t rx_rings = 1, tx_rings = 1;
  	uint16_t nb_rxd = RX_RING_SIZE;
         uint16_t nb_txd = TX_RING_SIZE;
         int retval;
@@ -242,6 +242,13 @@ port_init(uint16_t port)
                 if (retval < 0)
                         return retval;
         }
+
+        for (q = 0; q < rx_rings; q++) {
+		retval = rte_eth_rx_queue_setup(port, q, nb_rxd,
+				rte_eth_dev_socket_id(port), NULL, mbuf_pool);
+		if (retval < 0)
+			return retval;
+	}
 
         /* Start the Ethernet port. */
         retval = rte_eth_dev_start(port);
@@ -280,6 +287,7 @@ int main(int argc, char **argv)
 	uint16_t pkt_data_len;
 	int mac_flag=0,ip_src_flag=0,ip_dst_flag=0;
 	int counter = 0;
+	uint16_t portid;
 
 	ret = rte_eal_init(argc, argv);
 	if (ret < 0)
