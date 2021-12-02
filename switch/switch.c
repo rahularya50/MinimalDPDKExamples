@@ -291,7 +291,9 @@ void rx_packets(void)
 
 			packet_count += nb_rx;
 
-			send_packet();
+                        for (int i = 0; i != nb_rx; ++i) {
+			        send_packet();
+                        }
 
 		}
 	}
