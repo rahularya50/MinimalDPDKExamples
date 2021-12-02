@@ -306,6 +306,9 @@ int main(int argc, char **argv)
                         IP_DST_ADDR=string_to_ip(optarg);
                         ip_dst_flag=1;
                         break;
+                case 'n':
+                        packet_size = atoi(optarg);
+                        break;
 		case 'h':
 			printf("usage -- -m [dst MAC] -s [src IP] -d [dst IP] -n [packet size]\n");
 			exit(0);
